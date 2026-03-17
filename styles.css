@@ -597,18 +597,36 @@ body {
     animation: scorePop 0.3s ease;
 }
 
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translate(-50%, -30%); }
-    10% { opacity: 1; transform: translate(-50%, -50%); }
-    90% { opacity: 1; transform: translate(-50%, -50%); }
-    100% { opacity: 0; transform: translate(-50%, -70%); }
+/* ========== MENSAJES FLOTANTES OPTIMIZADOS ========== */
+@keyframes messageFade {
+    0% { 
+        opacity: 0; 
+        transform: translate(-50%, -15px);
+    }
+    15% { 
+        opacity: 0.85; 
+        transform: translate(-50%, 0);
+    }
+    85% { 
+        opacity: 0.85; 
+        transform: translate(-50%, 0);
+    }
+    100% { 
+        opacity: 0; 
+        transform: translate(-50%, -15px);
+    }
 }
 
 .game-message {
-    animation: fadeInOut 1.5s ease forwards;
+    pointer-events: none !important;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.3px;
+    font-family: 'Courier New', monospace;
+    transition: none;
+    will-change: transform, opacity;
 }
 
-/* ========== RESPONSIVE ========== */
+/* Mensajes más pequeños en móvil */
 @media (max-width: 600px) {
     .game-title {
         font-size: 2rem;
@@ -650,6 +668,12 @@ body {
     .control-btn {
         padding: 10px 5px;
         font-size: 0.9rem;
+    }
+    
+    .game-message {
+        font-size: 0.9rem !important;
+        padding: 6px 15px !important;
+        top: 15% !important;
     }
 }
 
