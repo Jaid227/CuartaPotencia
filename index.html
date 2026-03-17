@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Armonía de Cuartetos · Combos & Colores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-wrapper">
+        <div class="game-container">
+            <!-- Pantalla de inicio -->
+            <div class="start-screen" id="startScreen">
+                <h1 class="game-title">🎴 ARMONÍA DE CUARTETOS</h1>
+                <h2 class="subtitle">⚡ EDICIÓN COMBOS ⚡</h2>
+                <div class="start-buttons">
+                    <button class="start-btn" id="startGameBtn">▶ COMENZAR PARTIDA</button>
+                    <button class="scores-btn" id="showScoresBtn">🏆 MEJORES PUNTUACIONES</button>
+                </div>
+            </div>
+
+            <!-- Pantalla de juego principal -->
+            <div class="game-play-screen hidden" id="gamePlayScreen">
+                <!-- Área superior: Puntos, combo, tiempo -->
+                <div class="top-section">
+                    <div class="stats-container">
+                        <div class="stat-box">
+                            <span class="stat-label">⏱️ TIEMPO</span>
+                            <span class="stat-value" id="timerDisplay">03:00</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">⭐ PUNTOS</span>
+                            <span class="stat-value" id="scoreDisplay">0</span>
+                        </div>
+                        <div class="stat-box combo-box" id="comboBox">
+                            <span class="stat-label">⚡ COMBO</span>
+                            <span class="stat-value" id="comboDisplay">x1</span>
+                            <div class="combo-timer" id="comboTimer"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Focos de color -->
+                    <div class="focus-lights">
+                        <div class="focus-light red-light" id="redFocus">
+                            <span class="focus-label">🔴 ROJO</span>
+                            <span class="focus-multiplier" id="redMultiplier">x1</span>
+                        </div>
+                        <div class="focus-light blue-light" id="blueFocus">
+                            <span class="focus-label">🔵 AZUL</span>
+                            <span class="focus-multiplier" id="blueMultiplier">x1</span>
+                        </div>
+                    </div>
+
+                    <!-- Instrucción -->
+                    <div class="selection-instruction">
+                        <span id="selectionCount">0</span>/4 cartas seleccionadas
+                    </div>
+                </div>
+
+                <!-- Tablero de juego 8x8 -->
+                <div class="board" id="gameBoard"></div>
+
+                <!-- Controles del juego -->
+                <div class="game-controls">
+                    <button class="control-btn" id="deselectBtn">🔽 Deseleccionar todo</button>
+                    <button class="control-btn" id="pauseBtn">⏸️ Pausa</button>
+                    <button class="control-btn" id="resetGameBtn">🔄 Reiniciar</button>
+                    <button class="control-btn" id="menuBtn">🏠 Menú</button>
+                </div>
+            </div>
+
+            <!-- Pantalla de pausa -->
+            <div class="pause-screen hidden" id="pauseScreen">
+                <div class="pause-content">
+                    <h2>⏸️ JUEGO EN PAUSA</h2>
+                    <button class="pause-btn" id="resumeBtn">▶ Continuar</button>
+                    <button class="pause-btn" id="restartFromPauseBtn">🔄 Reiniciar</button>
+                    <button class="pause-btn" id="menuFromPauseBtn">🏠 Menú Principal</button>
+                </div>
+            </div>
+
+            <!-- Pantalla de game over -->
+            <div class="gameover-screen hidden" id="gameoverScreen">
+                <div class="gameover-content">
+                    <h2>🎮 ¡PARTIDA COMPLETADA!</h2>
+                    <div class="final-score-box">
+                        <span class="final-score-label">PUNTUACIÓN FINAL:</span>
+                        <span class="final-score-value" id="finalScore">0</span>
+                    </div>
+                    <div class="max-combo-box">
+                        <span class="max-combo-label">🔥 MEJOR COMBO:</span>
+                        <span class="max-combo-value" id="maxCombo">x1</span>
+                    </div>
+                    <div class="time-completed" id="timeCompleted">03:00</div>
+                    
+                    <!-- Formulario para guardar puntuación -->
+                    <div class="save-score-form" id="saveScoreForm">
+                        <input type="text" id="playerName" placeholder="TU NOMBRE" maxlength="15">
+                        <button class="save-btn" id="saveScoreBtn">💾 GUARDAR PUNTUACIÓN</button>
+                    </div>
+                    
+                    <button class="play-again-btn" id="playAgainBtn">▶ JUGAR DE NUEVO</button>
+                    <button class="menu-from-gameover-btn" id="menuFromGameoverBtn">🏠 MENÚ</button>
+                </div>
+            </div>
+
+            <!-- Pantalla de puntuaciones -->
+            <div class="scores-screen hidden" id="scoresScreen">
+                <div class="scores-content">
+                    <h2>🏆 MEJORES PUNTUACIONES</h2>
+                    <div class="scores-list" id="scoresList"></div>
+                    <div class="scores-buttons">
+                        <button class="clear-scores-btn" id="clearScoresBtn">🗑️ BORRAR TODO</button>
+                        <button class="back-from-scores-btn" id="backFromScoresBtn">🔙 VOLVER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
