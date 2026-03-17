@@ -1,10 +1,10 @@
 // ---> CONFIGURACIÓN DE IMÁGENES <---
 // Reemplaza estos emojis con las rutas de tus imágenes
 const IMAGES = [
-    '🐶', '🐱', '🐭', '🐹',  // Índices 0-3: Cuartetos rojos
-    '🐰', '🦊', '🐻', '🐼',  // Índices 4-7: Cuartetos rojos
-    '🐨', '🐯', '🦁', '🐮',  // Índices 8-11: Cuartetos azules
-    '🦄', '🐧', '🐦', '🐤'   // Índices 12-15: Cuartetos azules
+    '🌹', '🌺', '🍁', '🌷',  // Índices 0-3: Cuartetos rojos
+    '🥀', '🍅', '🌶️', '🍓',  // Índices 4-7: Cuartetos rojos
+    '🌿', '🌱', '🍀', '🌲',  // Índices 8-11: Cuartetos azules
+    '🌳', '☘️', '🪴', '🌾'    // Índices 12-15: Cuartetos azules
 ];
 
 const GAME_CONFIG = {
