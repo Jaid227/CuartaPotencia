@@ -88,7 +88,7 @@ class ArmoniaCuartetos {
         this.generateColoredQuartets();
     }
 
-    // ========== NUEVA FUNCIÓN: GENERAR CUARTETOS POR COLOR ==========
+    // ========== GENERAR CUARTETOS POR COLOR ==========
     generateColoredQuartets() {
         // 8 cuartetos rojos (usando imágenes 0-7)
         const redQuartets = [];
@@ -250,16 +250,14 @@ class ArmoniaCuartetos {
     }
 
     startFocusRotation() {
-        // Elegir foco aleatorio al inicio
         this.activeFocus = Math.random() < 0.5 ? 'red' : 'blue';
         this.updateFocusUI();
         
-        // Cambiar cada 15 segundos
         this.focusInterval = setInterval(() => {
             if (this.gameActive && !this.gamePaused) {
                 this.activeFocus = this.activeFocus === 'red' ? 'blue' : 'red';
                 this.updateFocusUI();
-                this.showMessage(`🎯 ¡Foco ${this.activeFocus === 'red' ? '🔴 ROJO' : '🔵 AZUL'} activo!`);
+                this.showMessage(`🎯 ${this.activeFocus === 'red' ? '🔴' : '🔵'}`, 'focus');
             }
         }, GAME_CONFIG.FOCUS_CHANGE_INTERVAL);
     }
@@ -295,7 +293,7 @@ class ArmoniaCuartetos {
         card.dataset.id = id;
         card.dataset.imageIndex = cardData.imageIndex;
         card.dataset.color = cardData.color;
-        card.dataset.quartetId = cardData.quartetId; // Importante: ID del cuarteto
+        card.dataset.quartetId = cardData.quartetId;
         card.textContent = IMAGES[cardData.imageIndex];
         
         card.addEventListener('touchstart', (e) => this.handleCardInteraction(e, card), { passive: false });
@@ -304,47 +302,38 @@ class ArmoniaCuartetos {
         return card;
     }
 
-    // ========== MANEJO DE SELECCIÓN CORREGIDO ==========
+    // ========== MANEJO DE SELECCIÓN ==========
     handleCardInteraction(e, card) {
         e.preventDefault();
         
         if (!this.gameActive || this.gamePaused) return;
         
         const quartetId = card.dataset.quartetId;
-        
-        // Verificar si la carta ya está seleccionada
         const cardIndex = this.selectedCards.findIndex(c => c.dataset.id === card.dataset.id);
         
         if (cardIndex !== -1) {
-            // Deseleccionar
             card.classList.remove('selected');
             this.selectedCards.splice(cardIndex, 1);
         } else {
-            // IMPORTANTE: Solo permitir seleccionar del MISMO CUARTETO
             if (this.selectedCards.length === 0) {
-                // Primera carta seleccionada
                 card.classList.add('selected');
                 this.selectedCards.push(card);
             } else {
-                // Verificar que sea del mismo cuarteto
                 const firstCardQuartetId = this.selectedCards[0].dataset.quartetId;
                 
                 if (quartetId === firstCardQuartetId && this.selectedCards.length < 4) {
-                    // Es del mismo cuarteto y no hemos llegado a 4
                     card.classList.add('selected');
                     this.selectedCards.push(card);
                 } else if (quartetId !== firstCardQuartetId) {
-                    // Es de otro cuarteto - mostramos mensaje
-                    this.showMessage('❌ Solo del mismo cuarteto');
+                    this.showMessage('❌ Mismo cuarteto', 'error');
                 } else if (this.selectedCards.length >= 4) {
-                    this.showMessage('❌ Máximo 4 cartas');
+                    this.showMessage('❌ Máximo 4', 'error');
                 }
             }
         }
         
         this.updateSelectionCount();
         
-        // Verificar si tenemos un cuarteto completo (4 cartas)
         if (this.selectedCards.length === 4) {
             this.completeQuartet();
         }
@@ -353,52 +342,43 @@ class ArmoniaCuartetos {
     completeQuartet() {
         const firstCard = this.selectedCards[0];
         const cardColor = firstCard.dataset.color;
-        const quartetId = firstCard.dataset.quartetId;
         
-        // Calcular puntos con multiplicadores
         let points = GAME_CONFIG.POINTS_PER_QUARTET;
-        
-        // Multiplicador por combo
         points *= this.comboMultiplier;
         
-        // Multiplicador por foco activo (x2 si el color coincide)
         const focusActive = (this.activeFocus === cardColor);
         if (focusActive) {
             points *= 2;
         }
         
-        // Mostrar puntos ganados
-        this.showMessage(`✨ +${points} pts ${this.comboMultiplier > 1 ? `(x${this.comboMultiplier} combo)` : ''} ${focusActive ? '🎯 x2 foco' : ''}`);
+        this.showMessage(`✨ +${points}`, 'success');
         
-        // Animar y eliminar cartas
+        if (this.comboMultiplier > 1) {
+            this.showMessage(`⚡ x${this.comboMultiplier}`, 'combo');
+        }
+        
+        if (focusActive) {
+            this.showMessage(`🎯 FOCO +`, 'focus');
+        }
+        
         this.selectedCards.forEach(card => {
             card.classList.add('disappearing');
         });
         
         setTimeout(() => {
-            // Eliminar las cartas del tablero
             this.selectedCards.forEach(card => {
                 card.remove();
             });
             
-            // Eliminar las cartas del array allCards
             const cardIdsToRemove = this.selectedCards.map(c => parseInt(c.dataset.id));
             this.allCards = this.allCards.filter((_, index) => !cardIdsToRemove.includes(index));
             
-            // Reindexar las cartas restantes
             this.reindexCards();
-            
-            // Aumentar puntuación
             this.score += points;
             this.updateScore();
-            
-            // Activar combo
             this.activateCombo();
-            
-            // Limpiar selección
             this.deselectAll();
             
-            // Verificar victoria (tablero vacío)
             if (this.board.children.length === 0) {
                 this.gameOver(true);
             }
@@ -406,7 +386,6 @@ class ArmoniaCuartetos {
     }
 
     reindexCards() {
-        // Actualizar los dataset.id de las cartas en el DOM
         const cards = document.querySelectorAll('.card');
         cards.forEach((card, newIndex) => {
             card.dataset.id = newIndex;
@@ -443,7 +422,6 @@ class ArmoniaCuartetos {
                 
                 if (timeLeft <= 0) {
                     this.resetCombo();
-                    this.showMessage('⏰ Combo terminado');
                 }
             }
         }, 100);
@@ -457,6 +435,7 @@ class ArmoniaCuartetos {
             clearInterval(this.comboInterval);
             this.comboInterval = null;
         }
+        this.showMessage('⏰ Fin combo', 'error');
     }
 
     // ========== UTILIDADES ==========
@@ -480,31 +459,62 @@ class ArmoniaCuartetos {
         }, 300);
     }
 
-    showMessage(msg) {
-        // Crear un pequeño toast temporal
+    // ========== FUNCIÓN CORREGIDA - MENSAJES QUE NO BLOQUEAN ==========
+    showMessage(msg, type = 'info') {
         const toast = document.createElement('div');
-        toast.className = 'game-message';
+        toast.className = `game-message ${type}`;
         toast.textContent = msg;
+        
         toast.style.cssText = `
             position: fixed;
-            top: 50%;
+            top: 20%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.9);
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
             color: #ffd700;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.2rem;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 1rem;
             font-weight: bold;
-            z-index: 2000;
-            border: 2px solid #ffd700;
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+            z-index: 999;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(2px);
+            box-shadow: 0 0 15px rgba(255,215,0,0.2);
+            pointer-events: none;
+            animation: messageFade 1.2s ease forwards;
+            opacity: 0;
+            white-space: nowrap;
         `;
+        
+        switch(type) {
+            case 'error':
+                toast.style.background = 'rgba(255, 68, 68, 0.7)';
+                toast.style.color = 'white';
+                break;
+            case 'success':
+                toast.style.background = 'rgba(76, 175, 80, 0.7)';
+                toast.style.color = 'white';
+                break;
+            case 'combo':
+                toast.style.background = 'rgba(255, 215, 0, 0.7)';
+                toast.style.color = '#1a1a2e';
+                toast.style.fontSize = '1.2rem';
+                break;
+            case 'focus':
+                toast.style.background = 'rgba(255, 255, 255, 0.2)';
+                toast.style.color = '#ffd700';
+                toast.style.fontSize = '1.1rem';
+                toast.style.border = '2px solid #ffd700';
+                break;
+        }
+        
         document.body.appendChild(toast);
         
         setTimeout(() => {
-            toast.remove();
-        }, 1500);
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 1200);
     }
 
     // ========== GAME OVER ==========
@@ -542,7 +552,7 @@ class ArmoniaCuartetos {
         const playerName = this.playerNameInput.value.trim().toUpperCase();
         
         if (!playerName) {
-            this.showMessage('❌ Ingresa tu nombre');
+            this.showMessage('❌ Ingresa tu nombre', 'error');
             return;
         }
         
@@ -562,7 +572,7 @@ class ArmoniaCuartetos {
         }
         
         this.saveScores();
-        this.showMessage('✅ ¡Puntuación guardada!');
+        this.showMessage('✅ ¡Guardado!', 'success');
         
         setTimeout(() => {
             this.returnToMenu();
@@ -602,7 +612,7 @@ class ArmoniaCuartetos {
             this.highScores = [];
             this.saveScores();
             this.renderScores();
-            this.showMessage('🗑️ Puntuaciones borradas');
+            this.showMessage('🗑️ Borradas', 'error');
         }
     }
 
