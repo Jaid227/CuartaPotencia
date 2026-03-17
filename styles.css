@@ -181,20 +181,20 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.733) 0%, transparent 70%);
     animation: pulse 1s ease infinite;
 }
 
 .red-light {
-    background: linear-gradient(135deg, #ff4444, #cc0000);
+    background: linear-gradient(135deg, #f40303, #f05454);
     color: white;
     border-color: #ff9999;
 }
 
 .blue-light {
-    background: linear-gradient(135deg, #4444ff, #0000cc);
+    background: linear-gradient(135deg, #1dcc02, #59f14e);
     color: white;
-    border-color: #9999ff;
+    border-color: #a0ff99;
 }
 
 .focus-label {
@@ -258,7 +258,7 @@ body {
 }
 
 .card.blue-card {
-    background: linear-gradient(145deg, #6b6bff, #4444ff);
+    background: linear-gradient(145deg, #77ff6b, #4dff44);
     border: 2px solid #9999ff;
 }
 
